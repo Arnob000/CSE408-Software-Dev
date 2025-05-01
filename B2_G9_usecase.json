@@ -1,0 +1,481 @@
+[
+  {
+    "usecase": {
+      "name": "Asset Group Creation",
+      "scenario": "User creates a new crypto asset group.",
+      "actors": "User",
+      "preconditions": "User is registered in the system, User must have coins in the wallet to add an initial token.",
+      "steps": [
+        "User enters the name for the new crypto asset group",
+        "User adds a description",
+        "User adds an initial token (Optional)"
+      ]
+    },
+    "testcases": [
+      {
+        "name": "Valid Asset Group Creation",
+        "description": "Verify that a user can successfully create a new crypto asset group.",
+        "input": {
+          "assetGroupDetails": {
+            "name": "MyAssetGroup",
+            "description": "A diversified portfolio of crypto assets",
+            "initialCoin": {}
+          }
+        },
+        "expected": {
+          "outcome": "Asset group creation successful",
+          "status": "Created"
+        }
+      },
+      {
+        "name": "Asset Group Creation with Initial Coin",
+        "description": "Verify that a user can create an asset group with an initial coin.",
+        "input": {
+          "assetGroupDetails": {
+            "name": "MyAssetGroupWithCoin",
+            "description": "A portfolio with an initial coin",
+            "initialCoin": {
+              "name": "Bitcoin",
+              "symbol": "BTC",
+              "walletAddress": "UserWallet123"
+            }
+          }
+        },
+        "expected": {
+          "outcome": "Asset group creation with initial coin successful",
+          "status": "Created"
+        }
+      },
+      {
+        "name": "Empty Asset Group Details",
+        "description": "Verify that the system handles the case where a user submits an empty asset group creation request.",
+        "input": {
+          "assetGroupDetails": {
+            "name": "",
+            "description": "",
+            "initialCoin": {}
+          }
+        },
+        "expected": {
+          "outcome": "Asset group creation failed",
+          "status": "Rejected"
+        }
+      },
+      {
+        "name": "Asset Group Creation with Initial Coin not in Wallet",
+        "description": "Verify that the system handles the case where a user submits an asset group creation request with a token that is not present in the wallet.",
+        "input": {
+          "assetGroupDetails": {
+            "name": "MyAssetGroupWithCoin",
+            "description": "A portfolio with an initial coin",
+            "initialCoin": {
+              "name": "Ethereum",
+              "symbol": "ETH",
+              "walletAddress": "UserWallet123"
+            }
+          }
+        },
+        "expected": {
+          "outcome": "Asset group creation with initial coin failed",
+          "status": "Rejected"
+        }
+      },
+      {
+        "name": "Asset Group Creation with Incorrect Wallet Address",
+        "description": "Verify that the system handles the case where a user submits an asset group creation request with an incorrect wallet address.",
+        "input": {
+          "assetGroupDetails": {
+            "name": "MyAssetGroupWithCoin",
+            "description": "A portfolio with an initial coin",
+            "initialCoin": {
+              "name": "Bitcoin",
+              "symbol": "BTC",
+              "walletAddress": "IncorrectWallet"
+            }
+          }
+        },
+        "expected": {
+          "outcome": "Asset group creation with initial coin failed",
+          "status": "Rejected"
+        }
+      },
+      {
+        "name": "Asset Group Creation with Empty Wallet Address",
+        "description": "Verify that the system handles the case where a user submits an asset group creation request with an empty wallet address.",
+        "input": {
+          "assetGroupDetails": {
+            "name": "MyAssetGroupWithCoin",
+            "description": "A portfolio with an initial coin",
+            "initialCoin": {
+              "name": "Bitcoin",
+              "symbol": "BTC",
+              "walletAddress": ""
+            }
+          }
+        },
+        "expected": {
+          "outcome": "Asset group creation with initial coin failed",
+          "status": "Rejected"
+        }
+      }
+    ]
+  },
+  {
+    "usecase": {
+      "name": "Add Tokens to Asset Group",
+      "scenario": "User adds valid tokens to an existing crypto asset group.",
+      "actors": "User",
+      "preconditions": "User is registered in the system, has an existing crypto asset group, and possesses the necessary wallet(s).",
+      "steps": [
+        "User selects an existing crypto asset group",
+        "User adds valid tokens to the selected asset group"
+      ]
+    },
+    "testcases": [
+      {
+        "name": "Valid Token Addition - Same Wallet",
+        "description": "Verify that the user can successfully add valid tokens from the same wallet to an existing crypto asset group.",
+        "input": {
+          "selectedAssetGroup": "MyExistingAssetGroup",
+          "tokensToAdd": [
+            {
+              "name": "Ethereum",
+              "symbol": "ETH",
+              "walletAddress": "UserWallet123"
+            },
+            {
+              "name": "Cardano",
+              "symbol": "ADA",
+              "walletAddress": "UserWallet123"
+            }
+          ]
+        },
+        "expected": {
+          "outcome": "Token addition successful",
+          "status": "Updated"
+        }
+      },
+      {
+        "name": "Valid Token Addition - Different Wallets",
+        "description": "Verify that the user can successfully add valid tokens from different wallets to an existing crypto asset group.",
+        "input": {
+          "selectedAssetGroup": "MyExistingAssetGroup",
+          "tokensToAdd": [
+            {
+              "name": "Bitcoin",
+              "symbol": "BTC",
+              "walletAddress": "UserWallet456"
+            },
+            {
+              "name": "Litecoin",
+              "symbol": "LTC",
+              "walletAddress": "UserWallet789"
+            }
+          ]
+        },
+        "expected": {
+          "outcome": "Token addition successful",
+          "status": "Updated"
+        }
+      },
+      {
+        "name": "Empty Token List",
+        "description": "Verify that the system handles the case where the user tries to add an empty list of tokens to an existing asset group.",
+        "input": {
+          "selectedAssetGroup": "MyExistingAssetGroup",
+          "tokensToAdd": []
+        },
+        "expected": {
+          "outcome": "Token addition failed",
+          "status": "Not Updated"
+        }
+      },
+      {
+        "name": "Invalid Token Addition - Token Not in Wallet",
+        "description": "Verify that the system handles the case where the user tries to add tokens not present in their wallet to an existing asset group.",
+        "input": {
+          "selectedAssetGroup": "MyExistingAssetGroup",
+          "tokensToAdd": [
+            {
+              "name": "InvalidToken",
+              "symbol": "INV",
+              "walletAddress": "UserWallet123"
+            }
+          ]
+        },
+        "expected": {
+          "outcome": "Token addition failed",
+          "status": "Not Updated"
+        }
+      },
+      {
+        "name": "Invalid Token Addition - Empty Wallet Address",
+        "description": "Verify that the system handles the case where the user tries to add tokens with empty wallet address to an existing asset group.",
+        "input": {
+          "selectedAssetGroup": "MyExistingAssetGroup",
+          "tokensToAdd": [
+            {
+              "name": "Bitcoin",
+              "symbol": "BTC",
+              "walletAddress": ""
+            }
+          ]
+        },
+        "expected": {
+          "outcome": "Token addition failed",
+          "status": "Not Updated"
+        }
+      }
+    ]
+  },
+  {
+    "usecase": {
+      "name": "View Assets in Asset Group",
+      "scenario": "User wants to view the existing crypto assets within asset groups.",
+      "actors": "User",
+      "preconditions": "User is registered in the system and has at least one crypto asset group with assets.",
+      "steps": [
+        "User navigates to the 'Asset Groups' section of the application",
+        "User selects a specific asset group to view",
+        "User views the details of the selected asset group, including its name, description, and associated assets"
+      ]
+    },
+    "testcases": [
+      {
+        "name": "View Specific Asset Group",
+        "description": "Verify that the user can successfully view the details of a specific crypto asset group.",
+        "input": {
+          "selectedAssetGroup": "MyCryptoAssets"
+        },
+        "expected": {
+          "outcome": "Asset group details viewed successfully",
+          "access": "Allowed"
+        }
+      },
+      {
+        "name": "View Assets in a Group",
+        "description": "Verify that the user can successfully view the assets within a specific crypto asset group.",
+        "input": {
+          "selectedAssetGroup": "MyCryptoAssets",
+          "selectedAsset": "Bitcoin"
+        },
+        "expected": {
+          "outcome": "Asset within the group viewed successfully",
+          "access": "Allowed"
+        }
+      }
+    ]
+  },
+  {
+    "usecase": {
+      "name": "Asset Management Request",
+      "scenario": "User requests an experienced personal to manage user's assets.",
+      "actors": "User, System",
+      "preconditions": "User is registered in the system.",
+      "steps": [
+        "User selects token type(s) to be invested in",
+        "User enters the amount to invest",
+        "User selects the expected profit percentage",
+        "System dynamically populates the list of available experienced personals based on user's selections",
+        "User selects an experienced personal from the provided list",
+        "User submits the asset management request"
+      ]
+    },
+    "testcases": [
+      {
+        "name": "Valid Asset Management Request",
+        "description": "Verify that a user can successfully request an experienced personal to manage user's assets.",
+        "input": {
+          "tokenTypes": ["Bitcoin", "Ethereum"],
+          "investmentAmount": 10000,
+          "expectedProfitPercentage": 10,
+          "selectedExperiencedPersonal": "JohnDoe123"
+        },
+        "expected": {
+          "outcome": "Asset management request submitted successfully",
+          "status": "Submitted"
+        }
+      },
+      {
+        "name": "Empty Token Types",
+        "description": "Verify that the system handles the case where the user tries to submit a request without specifying token types.",
+        "input": {
+          "tokenTypes": [],
+          "investmentAmount": 5000,
+          "expectedProfitPercentage": 8,
+          "selectedExperiencedPersonal": "JohnDoe456"
+        },
+        "expected": {
+          "outcome": "Asset management request submission unsuccessful",
+          "status": "Failed"
+        }
+      },
+      {
+        "name": "Negative Investment Amount",
+        "description": "Verify that the system handles the case where the user enters a negative investment amount.",
+        "input": {
+          "tokenTypes": ["Bitcoin"],
+          "investmentAmount": -2000,
+          "expectedProfitPercentage": 12,
+          "selectedExperiencedPersonal": "JohnDoe789"
+        },
+        "expected": {
+          "outcome": "Asset management request submission unsuccessful",
+          "status": "Failed"
+        }
+      },
+      {
+        "name": "Invalid Expected Profit Percentage",
+        "description": "Verify that the system handles the case where the user selects an invalid expected profit percentage.",
+        "input": {
+          "tokenTypes": ["Ethereum"],
+          "investmentAmount": 8000,
+          "expectedProfitPercentage": null,
+          "selectedExperiencedPersonal": "JohnDoe101"
+        },
+        "expected": {
+          "outcome": "Asset management request submission unsuccessful",
+          "status": "Failed"
+        }
+      }
+    ]
+  },
+  {
+    "usecase": {
+      "name": "Responds to Asset Management Request",
+      "scenario": "Experienced personal receives an asset management request and responds to either accept or reject the request.",
+      "actors": "Experienced Personal",
+      "preconditions": "Experienced personal is registered in the system and has received an asset management request.",
+      "steps": [
+        "Experienced personal receives the asset management request notification",
+        "Experienced personal reviews the details of the request including token types, investment amount, and expected profit percentage",
+        "Experienced personal decides to either accept or reject the request",
+        "Experienced personal provides additional comments (optional)",
+        "Experienced personal submits the response"
+      ]
+    },
+    "testcases": [
+      {
+        "name": "Experienced Personal Accepts Request",
+        "description": "Verify that an experienced personal can successfully accept an asset management request.",
+        "input": {
+          "requestID": "12345",
+          "response": "Accept",
+          "comments": "I am excited to manage your assets!"
+        },
+        "expected": {
+          "outcome": "Asset management request accepted successfully",
+          "status": "Accepted"
+        }
+      },
+      {
+        "name": "Experienced Personal Rejects Request",
+        "description": "Verify that an experienced personal can successfully reject an asset management request.",
+        "input": {
+          "requestID": "67890",
+          "response": "Reject",
+          "comments": "I am currently unable to take on new clients."
+        },
+        "expected": {
+          "outcome": "Asset management request rejected successfully",
+          "status": "Rejected"
+        }
+      },
+      {
+        "name": "Missing Response",
+        "description": "Verify that the system handles the case where the experienced personal submits a response without specifying accept or reject.",
+        "input": {
+          "requestID": "24680",
+          "comments": "I am currently evaluating the request."
+        },
+        "expected": {
+          "outcome": "Asset management request response unsuccessful",
+          "status": "Failed"
+        }
+      }
+    ]
+  },
+  {
+    "usecase": {
+      "name": "User Assigns or Refuses Accepted Personal to Manage Assets",
+      "scenario": "User either assigns or refuses the experienced personal who has accepted the asset management request to actually manage the user's assets.",
+      "actors": "User",
+      "preconditions": "User has received an acceptance response from an experienced personal for the asset management request.",
+      "steps": [
+        "User receives the acceptance notification from the experienced personal",
+        "User reviews the details of the acceptance including personal's details and comments",
+        "User decides to either confirm the assignment or refuse it",
+        "If confirming, user provides additional instructions or preferences (optional)",
+        "User submits the assignment or refusal"
+      ]
+    },
+    "testcases": [
+      {
+        "name": "Confirm Assignment",
+        "description": "Verify that the user can successfully confirm the assignment of the accepted experienced personal to manage the assets.",
+        "input": {
+          "requestID": "12345",
+          "decision": "Confirm",
+          "acceptedPersonal": "JohnDoe123",
+          "additionalInstructions": "Please focus on long-term growth."
+        },
+        "expected": {
+          "outcome": "Assignment confirmed successfully",
+          "status": "Confirmed"
+        }
+      },
+      {
+        "name": "Refuse Assignment",
+        "description": "Verify that the user can successfully refuse the assignment of the accepted experienced personal.",
+        "input": {
+          "requestID": "12345",
+          "decision": "Refuse",
+          "acceptedPersonal": "JohnDoe123"
+        },
+        "expected": {
+          "outcome": "Assignment refused successfully",
+          "status": "Refused"
+        }
+      },
+      {
+        "name": "Invalid Request ID",
+        "description": "Verify that the system handles the case where an invalid request ID is provided.",
+        "input": {
+          "requestID": "InvalidID",
+          "decision": "Confirm",
+          "acceptedPersonal": "JohnDoe456",
+          "additionalInstructions": "Please focus on short-term gains."
+        },
+        "expected": {
+          "outcome": "Assignment or refusal unsuccessful",
+          "status": "Failed"
+        }
+      },
+      {
+        "name": "Missing Decision",
+        "description": "Verify that the system handles the case where the user tries to submit without specifying the decision.",
+        "input": {
+          "requestID": "67890",
+          "acceptedPersonal": "JohnDoe789"
+        },
+        "expected": {
+          "outcome": "Assignment or refusal unsuccessful",
+          "status": "Failed"
+        }
+      },
+      {
+        "name": "Empty Additional Instructions",
+        "description": "Verify that the user can successfully submit an assignment without providing additional instructions.",
+        "input": {
+          "requestID": "13579",
+          "decision": "Confirm",
+          "acceptedPersonal": "JohnDoe789"
+        },
+        "expected": {
+          "outcome": "Assignment confirmed successfully",
+          "status": "Confirmed"
+        }
+      }
+    ]
+  }
+]
